@@ -1,4 +1,4 @@
-import 'package:adv_flutter_animation/view/task_1/screen/matching/matching_screen.dart';
+import 'package:adv_flutter_animation/view/task_2/screen/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MatchingScreen(),
+      home: HomeScreen(),
     );
   }
 }
