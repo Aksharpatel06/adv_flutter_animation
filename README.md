@@ -109,7 +109,7 @@ You can customize the appearance and behavior of the draggable and drag target w
 https://github.com/Aksharpatel06/adv_flutter_animation/assets/143181114/d0fcd17d-fde3-4bae-95d3-bc172f69c347
 
 
-## 6.2 Hero Widget ['Source Code'](https://github.com/Aksharpatel06/adv_flutter_animation/tree/master/lib/view/task_2/screen)
+##  Hero Widget [('Source Code')](https://github.com/Aksharpatel06/adv_flutter_animation/tree/master/lib/view/task_2/screen)
 
 The `Hero` widget in Flutter is used to create a seamless transition effect between two screens. When navigating between screens, the `Hero` widget makes it appear as if a widget on the first screen is flying or transitioning smoothly to the corresponding widget on the second screen. This can create visually appealing animations that enhance the user experience.
 
@@ -189,12 +189,14 @@ This creates a smooth animation that visually connects the two screens, enhancin
 - Ensure that the `tag` is unique within the context of the transition.
 - The child of the `Hero` widget should be identical in both screens for the best visual effect.
 - Use the `Hero` widget to improve navigation experience, particularly when you want to emphasize the connection between two elements on different screens.
+
 ### ScreenShoets
 
 <p align='center'>
   <img src='https://github.com/Aksharpatel06/adv_flutter_animation/assets/143181114/085d4ae7-e429-433f-a867-f306921406f3' width=240>
    <img src='https://github.com/Aksharpatel06/adv_flutter_animation/assets/143181114/fda2df7c-c73a-4ff9-bcb5-4a9040050dab' width=240>
 </p>
+
 ### video
 
 https://github.com/Aksharpatel06/adv_flutter_animation/assets/143181114/e943aa80-8bae-48b4-aecb-f13920d5069d
