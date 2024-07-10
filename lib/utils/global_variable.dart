@@ -24,3 +24,14 @@ List<Color> colorList = [
 ];
 
 int wrongAnswer = 2;
+
+
+// task 2
+
+List<String> titleList =[
+  'Meet Clients',
+  'Design Sprint',
+  'Icon Set Degien For Mobile',
+  'Flutter Study',
+];
+

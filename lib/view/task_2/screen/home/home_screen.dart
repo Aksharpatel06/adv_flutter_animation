@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'componects/animator_design.dart';
+import 'componects/todo_text.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -34,94 +37,104 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 55,
-              width: 55,
-              alignment: Alignment.topLeft,
-              decoration:
-                  const BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                )
-              ]),
-              child: Container(
-                height: 45,
-                width: 45,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Text(
-              'Hello, John.',
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: 35,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 1.2,
-              ),
-            ),
-            Text(
-              'This is a daily quote.',
-              style: GoogleFonts.montserrat(
-                color: Colors.white70,
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            Text(
-              'You have 10 tasks to do today.',
-              style: GoogleFonts.montserrat(
-                color: Colors.white70,
-                fontSize: 15,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              height: 300,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    spreadRadius: 1,
-                    blurRadius: 5
-                  )
-                ],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Row(
+            animatorDesign(),
+            todoText(),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/product');
+              },
+              child: Hero(
+                tag: 'box',
+                child: Container(
+                  height: 300,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                          color: Colors.black26, spreadRadius: 1, blurRadius: 5)
+                    ],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey,width: 0.8),
-                          ),
-                          child: Icon(Icons.alarm,color:Color(0xffE77169),),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border:
+                                    Border.all(color: Colors.grey, width: 0.8),
+                              ),
+                              child: const Icon(
+                                Icons.alarm,
+                                color: Color(0xffE77169),
+                              ),
+                            ),
+                            const Icon(
+                              Icons.more_vert,
+                              color: Colors.grey,
+                            )
+                          ],
                         ),
-                        Icon(Icons.more_vert,color: Colors.grey,)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ' 8 Tasks',
+                              style: GoogleFonts.montserrat(),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Custom',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 32,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 230,
+                                  child: LinearProgressIndicator(
+                                    value: 0.8,
+                                    borderRadius: BorderRadius.circular(2),
+                                    backgroundColor: Colors.pink.shade100,
+                                    color: const Color(0xffE77169),
+                                    minHeight: 5,
+                                  ),
+                                ),
+                                Text(
+                                  '88 %',
+                                  style: GoogleFonts.montserrat(),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: const Color(0xff429BF1),
+        child: const Icon(Icons.add),
       ),
     );
   }
