@@ -22,6 +22,8 @@ class _WidgetScreenState extends State<WidgetScreen>
   late Animation<double> _fadeAnimation;
   late Widget _animatedModalBarrier;
   late Animation<RelativeRect> animationPostioned;
+  GlobalKey<AnimatedListState> globalKey = GlobalKey<AnimatedListState>();
+
 
   @override
   void initState() {
@@ -123,6 +125,29 @@ class _WidgetScreenState extends State<WidgetScreen>
       animationController.forward();
     }
   }
+  void addData() {
+    globalKey.currentState!
+        .insertItem(0, duration: const Duration(milliseconds: 500));
+    data.insert(0, '${data.length}Data 1');
+  }
+
+  void removeData(int index) {
+    globalKey.currentState!.removeItem(
+      index,
+      duration: const Duration(milliseconds: 500),
+          (context, animation) {
+        return SizeTransition(
+          sizeFactor: animation,
+          child: const Card(
+            child: ListTile(
+              tileColor: Colors.red,
+            ),
+          ),
+        );
+      },
+    );
+    data.removeAt(index);
+  }
 
   @override
   void dispose() {
@@ -167,7 +192,7 @@ class _WidgetScreenState extends State<WidgetScreen>
               width: homePageProviderTrue.isMoved ? 120 : 50,
               height: homePageProviderTrue.isMoved ? 50 : 120,
               top: 2,
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
               curve: Curves.fastOutSlowIn,
               child: Container(
                 decoration: BoxDecoration(
@@ -339,7 +364,7 @@ class _WidgetScreenState extends State<WidgetScreen>
       ),
       DefaultTextStyleTransition(
         style: _textStyleAnimation,
-        child: Text('Hello, Flutter!'),
+        child: const Text('Hello, Flutter!'),
       ),
       SizedBox(
         height: 100,
@@ -371,6 +396,42 @@ class _WidgetScreenState extends State<WidgetScreen>
         progress: animationController,
         size: 50,
       ),
+      Column(
+        children: [
+          AnimatedList(
+            key: globalKey,
+            itemBuilder: (context, index, animation) {
+              return SizeTransition(
+                sizeFactor: animation,
+                child: Card(
+                  color: Colors.green.shade200,
+                  child: ListTile(
+                    title: Text(data[index]),
+                    trailing: IconButton(
+                      onPressed: () {
+                        removeData(index);
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              addData();
+            },
+            child: const Icon(Icons.add),
+          ),
+        ],
+      ),
     ];
 
     return Scaffold(
@@ -396,3 +457,4 @@ class _WidgetScreenState extends State<WidgetScreen>
 late AnimationController animationController;
 late Animation<double> _animation;
 late Animation<Offset> animation;
+List data = [];
