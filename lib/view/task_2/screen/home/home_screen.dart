@@ -43,19 +43,18 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, '/product');
               },
-              child: Hero(
-                tag: 'box',
-                child: Container(
-                  height: 300,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black26, spreadRadius: 1, blurRadius: 5)
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              child: Container(
+                height: 300,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26, spreadRadius: 1, blurRadius: 5)
+                  ],
+                ),
+                child: Hero(
+                  tag: 'background',
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -82,45 +81,48 @@ class HomeScreen extends StatelessWidget {
                             )
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              ' 8 Tasks',
-                              style: GoogleFonts.montserrat(),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Custom',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 32,
+                        Material(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ' 8 Tasks',
+                                style: GoogleFonts.montserrat(),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: 230,
-                                  child: LinearProgressIndicator(
-                                    value: 0.8,
-                                    borderRadius: BorderRadius.circular(2),
-                                    backgroundColor: Colors.pink.shade100,
-                                    color: const Color(0xffE77169),
-                                    minHeight: 5,
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Custom',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 32,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    width: 230,
+                                    child: LinearProgressIndicator(
+                                      value: 0.8,
+                                      borderRadius: BorderRadius.circular(2),
+                                      backgroundColor: Colors.pink.shade100,
+                                      color: const Color(0xffE77169),
+                                      minHeight: 5,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  '88 %',
-                                  style: GoogleFonts.montserrat(),
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Text(
+                                    '88 %',
+                                    style: GoogleFonts.montserrat(),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

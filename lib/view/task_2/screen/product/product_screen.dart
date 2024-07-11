@@ -11,13 +11,13 @@ class ProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: const [
-          Hero(
-            tag: 'box',
-            child: Icon(
-              Icons.more_vert,
-              color: Colors.grey,
-            ),
-          )
+          // Hero(
+          //   tag: 'background',
+          //   child: Icon(
+          //     Icons.more_vert,
+          //     color: Colors.grey,
+          //   ),
+          // )
         ],
       ),
       body: Padding(
@@ -26,7 +26,7 @@ class ProductScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Hero(
-              tag: 'box',
+              tag: 'background',
               child: Column(
                 children: [
                   Row(

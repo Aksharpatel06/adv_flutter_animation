@@ -25,13 +25,43 @@ List<Color> colorList = [
 
 int wrongAnswer = 2;
 
-
 // task 2
 
-List<String> titleList =[
+List<String> titleList = [
   'Meet Clients',
   'Design Sprint',
   'Icon Set Degien For Mobile',
   'Flutter Study',
 ];
 
+// task 3
+
+List<String> animationWidgetNameList = [
+  'AnimatedContainer',
+  'AnimatedOpacity',
+  'AnimatedPositioned',
+  'AnimatedAlign',
+  'AnimatedCrossFade',
+  'AnimatedSwitcher',
+  'Hero',
+  'FadeTransition',
+  'ScaleTransition',
+  'SlideTransition',
+  'RotationTransition',
+  'SizeTransition',
+  'PositionedTransition',
+  'DecoratedBoxTransition',
+  'DefaultTextStyleTransition',
+  'AnimatedModalBarrier',
+  'AnimatedList',
+  'AnimatedIcon',
+  'AnimatedPhysicalModel',
+  'AnimatedSize',
+  'AnimatedPadding',
+  'TweenAnimationBuilder',
+  'AnimatedBuilder',
+  'AnimatedDefaultTextStyle',
+  'AnimatedTheme',
+  'AnimatedWidget',
+  'ImplicitlyAnimatedWidget'
+];
