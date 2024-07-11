@@ -13,43 +13,44 @@ class WidgetScreen extends StatefulWidget {
 
 class _WidgetScreenState extends State<WidgetScreen>
     with SingleTickerProviderStateMixin {
+  late Animation<Color?> colorAnimation;
   late Animation<TextStyle> _textStyleAnimation;
   late Animation<double> _sizeAnimation;
   late Animation<double> _rotationAnimation;
   late Animation<Decoration> _decorationAnimation;
   late Animation<double> _opacityAnimation;
   late Animation<double> _fadeAnimation;
+  late Widget _animatedModalBarrier;
   late Animation<RelativeRect> animationPostioned;
+
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
-    );
+    )..repeat(reverse: true);
     _animation = CurvedAnimation(
       parent: animationController,
       curve: Curves.easeInOut,
     );
-    animation = Tween<Offset>(
-      begin: const Offset(1.0, 0.0),
-      end: const Offset(0.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    ));
+    animation =
+        Tween<Offset>(begin: Offset.zero, end: const Offset(0, 1.5)).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.elasticIn,
+      ),
+    );
+
+    colorAnimation = ColorTween(
+      begin: Colors.transparent,
+      end: Colors.black.withOpacity(0.5),
+    ).animate(animationController);
 
     _sizeAnimation = CurvedAnimation(
       parent: animationController,
       curve: Curves.easeInOut,
     );
-    // _rotationAnimation = Tween<double>(
-    //   begin: 0.0,
-    //   end: 1.0,
-    // ).animate(CurvedAnimation(
-    //   parent: animationController,
-    //   curve: Curves.easeInOut,
-    // ));
     _textStyleAnimation = TextStyleTween(
       begin: const TextStyle(
         color: Colors.blue,
@@ -104,6 +105,10 @@ class _WidgetScreenState extends State<WidgetScreen>
       parent: animationController,
       curve: Curves.easeInOut,
     ));
+    _animatedModalBarrier = AnimatedModalBarrier(
+      color: colorAnimation,
+      dismissible: true,
+    );
 
     _opacityAnimation = CurvedAnimation(
       parent: animationController,
@@ -128,9 +133,9 @@ class _WidgetScreenState extends State<WidgetScreen>
   @override
   Widget build(BuildContext context) {
     HomePageProvider homePageProviderfalse =
-    Provider.of<HomePageProvider>(context, listen: false);
+        Provider.of<HomePageProvider>(context, listen: false);
     HomePageProvider homePageProviderTrue =
-    Provider.of<HomePageProvider>(context, listen: true);
+        Provider.of<HomePageProvider>(context, listen: true);
 
     List<Widget> animationWidget = [
       AnimatedContainer(
@@ -152,15 +157,25 @@ class _WidgetScreenState extends State<WidgetScreen>
           color: Colors.blue,
         ),
       ),
-      AnimatedPositioned(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.elasticInOut,
-        left: homePageProviderTrue.leftPostioned,
-        top: homePageProviderTrue.topPostioned,
-        child: Container(
-          width: 100,
-          height: 100,
-          color:homePageProviderTrue.color,
+      SizedBox(
+        width: 200,
+        height: 350,
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            AnimatedPositioned(
+              width: homePageProviderTrue.isMoved ? 120 : 50,
+              height: homePageProviderTrue.isMoved ? 50 : 120,
+              top: 2,
+              duration: Duration(seconds: 2),
+              curve: Curves.fastOutSlowIn,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(15)),
+              ),
+            ),
+          ],
         ),
       ),
       AnimatedAlign(
@@ -177,15 +192,21 @@ class _WidgetScreenState extends State<WidgetScreen>
           width: 200,
           height: 200,
           color: Colors.blue,
-          child: const Center(child: Text('First Child', style: TextStyle(color: Colors.white))),
+          child: const Center(
+              child:
+                  Text('First Child', style: TextStyle(color: Colors.white))),
         ),
         secondChild: Container(
           width: 200,
           height: 300, // Different height to show size transition
           color: Colors.green,
-          child: const Center(child: Text('Second Child', style: TextStyle(color: Colors.white))),
+          child: const Center(
+              child:
+                  Text('Second Child', style: TextStyle(color: Colors.white))),
         ),
-        crossFadeState: homePageProviderTrue.isMoved ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+        crossFadeState: homePageProviderTrue.isMoved
+            ? CrossFadeState.showFirst
+            : CrossFadeState.showSecond,
         duration: const Duration(seconds: 2),
         firstCurve: Curves.easeIn,
         secondCurve: Curves.easeOut,
@@ -212,23 +233,23 @@ class _WidgetScreenState extends State<WidgetScreen>
         },
         child: homePageProviderTrue.isMoved
             ? Container(
-          key: const ValueKey(1),
-          width: 200,
-          height: 200,
-          color: Colors.blue,
-          child: const Center(
-              child:
-              Text('First Child', style: TextStyle(color: Colors.white))),
-        )
+                key: const ValueKey(1),
+                width: 200,
+                height: 200,
+                color: Colors.blue,
+                child: const Center(
+                    child: Text('First Child',
+                        style: TextStyle(color: Colors.white))),
+              )
             : Container(
-          key: const ValueKey(2),
-          width: 200,
-          height: 200,
-          color: Colors.green,
-          child: const Center(
-              child: Text('Second Child',
-                  style: TextStyle(color: Colors.white))),
-        ),
+                key: const ValueKey(2),
+                width: 200,
+                height: 200,
+                color: Colors.green,
+                child: const Center(
+                    child: Text('Second Child',
+                        style: TextStyle(color: Colors.white))),
+              ),
       ),
       const Hero(
         tag: 'box',
@@ -250,12 +271,15 @@ class _WidgetScreenState extends State<WidgetScreen>
           width: 200,
           height: 200,
           color: homePageProviderTrue.color,
-          child: const Center(child: Text('Scale Me', style: TextStyle(color: Colors.white))),
+          child: const Center(
+              child: Text('Scale Me', style: TextStyle(color: Colors.white))),
         ),
       ),
       SlideTransition(
         position: animation,
-        child: const FlutterLogo(size: 50,),
+        child: const FlutterLogo(
+          size: 50,
+        ),
       ),
       RotationTransition(
         turns: _animation,
@@ -263,7 +287,8 @@ class _WidgetScreenState extends State<WidgetScreen>
           width: 200,
           height: 200,
           color: Colors.blue,
-          child: const Center(child: Text('Rotate Me', style: TextStyle(color: Colors.white))),
+          child: const Center(
+              child: Text('Rotate Me', style: TextStyle(color: Colors.white))),
         ),
       ),
       SizeTransition(
@@ -278,7 +303,9 @@ class _WidgetScreenState extends State<WidgetScreen>
               width: 200,
               height: 200,
               color: Colors.blue,
-              child: const Center(child: Text('Animate Me', style: TextStyle(color: Colors.white))),
+              child: const Center(
+                  child: Text('Animate Me',
+                      style: TextStyle(color: Colors.white))),
             ),
           ),
         ),
@@ -289,7 +316,8 @@ class _WidgetScreenState extends State<WidgetScreen>
           width: 100,
           height: 100,
           color: Colors.blue,
-          child: const Center(child: Text('Move Me', style: TextStyle(color: Colors.white))),
+          child: const Center(
+              child: Text('Move Me', style: TextStyle(color: Colors.white))),
         ),
       ),
       DecoratedBoxTransition(
@@ -302,41 +330,68 @@ class _WidgetScreenState extends State<WidgetScreen>
             child: Container(
               width: 200,
               height: 200,
-              child: const Center(child: Text('Animate Me', style: TextStyle(color: Colors.white))),
+              child: const Center(
+                  child: Text('Animate Me',
+                      style: TextStyle(color: Colors.white))),
             ),
           ),
         ),
       ),
       DefaultTextStyleTransition(
         style: _textStyleAnimation,
-        child: Container(
-          padding: EdgeInsets.all(16),
-          color: Colors.yellow,
-          child: Text('Animate Me'),
+        child: Text('Hello, Flutter!'),
+      ),
+      SizedBox(
+        height: 100,
+        width: 250,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    homePageProviderTrue.isMoved = true;
+                  });
+                  animationController.reset();
+                  animationController.forward();
+                  Future.delayed(const Duration(seconds: 3), () {
+                    setState(() {
+                      homePageProviderTrue.isMoved = false;
+                    });
+                  });
+                },
+                child: const Text("Click")),
+            if (homePageProviderTrue.isMoved) _animatedModalBarrier
+          ],
         ),
+      ),
+      Container(),
+      AnimatedIcon(
+        icon: AnimatedIcons.add_event,
+        progress: animationController,
+        size: 50,
       ),
     ];
 
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(animationWidgetNameList[homePageProviderTrue.animationIndex]),
+        title:
+            Text(animationWidgetNameList[homePageProviderTrue.animationIndex]),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GestureDetector(onTap: () {
-          setState(() {
-            _toggleFade();
-
-            homePageProviderfalse.animatorChange();
-          });
-        }, child: animationWidget[homePageProviderTrue.animationIndex]),
+        child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _toggleFade();
+                homePageProviderfalse.animatorChange();
+              });
+            },
+            child: animationWidget[homePageProviderTrue.animationIndex]),
       ),
     );
   }
 }
-
-
 
 late AnimationController animationController;
 late Animation<double> _animation;
