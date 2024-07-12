@@ -62,6 +62,4 @@ List<String> animationWidgetNameList = [
   'AnimatedBuilder',
   'AnimatedDefaultTextStyle',
   'AnimatedTheme',
-  'AnimatedWidget',
-  'ImplicitlyAnimatedWidget'
 ];

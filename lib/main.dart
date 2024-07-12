@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => HomePageProvider(),)
+
+  ],child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,18 +15,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => HomePageProvider(),)
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // routes: {
-        //   '/':(context)=>const HomeScreen(),
-        //   '/product':(context)=>const ProductScreen(),
-        // },
-        home: HomePage(),
-      ),
+    HomePageProvider homePageProviderTrue =
+    Provider.of<HomePageProvider>(context, listen: true);
+    return MaterialApp(
+      // theme: homePageProviderTrue.isMoved ? ThemeData.dark() : ThemeData.light(),
+      debugShowCheckedModeBanner: false,
+      // routes: {
+      //   '/':(context)=>const HomeScreen(),
+      //   '/product':(context)=>const ProductScreen(),
+      // },
+      home: HomePage(),
     );
   }
 }

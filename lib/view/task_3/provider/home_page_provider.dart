@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class HomePageProvider extends ChangeNotifier {
@@ -7,9 +8,11 @@ class HomePageProvider extends ChangeNotifier {
   Color color = Colors.red;
   BorderRadius borderRadius = const BorderRadius.all(Radius.circular(10));
   double opacity = 1;
+  double padding =2;
   bool isMoved = false;
   double leftPostioned = 200;
   double topPostioned = 200;
+  ThemeData themeData =ThemeData.light();
 
   void changeIndex(int index) {
     animationIndex = index;
@@ -25,6 +28,9 @@ class HomePageProvider extends ChangeNotifier {
       opacity = 0;
       leftPostioned = 50;
       topPostioned = 50;
+      padding=20;
+      notifyListeners();
+      themeData = ThemeData.dark();
       isMoved = false;
       notifyListeners();
     } else {
@@ -34,7 +40,10 @@ class HomePageProvider extends ChangeNotifier {
       borderRadius = const BorderRadius.all(Radius.circular(10));
       opacity = 1;
       topPostioned = 200;
+      padding=2;
+      notifyListeners();
       leftPostioned = 200;
+      themeData =ThemeData.light();
       isMoved = true;
       notifyListeners();
     }

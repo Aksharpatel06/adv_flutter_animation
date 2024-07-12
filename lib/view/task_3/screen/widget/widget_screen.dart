@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:adv_flutter_animation/utils/global_variable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +14,7 @@ class WidgetScreen extends StatefulWidget {
 }
 
 class _WidgetScreenState extends State<WidgetScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late Animation<Color?> colorAnimation;
   late Animation<TextStyle> _textStyleAnimation;
   late Animation<double> _sizeAnimation;
@@ -21,17 +23,15 @@ class _WidgetScreenState extends State<WidgetScreen>
   late Animation<double> _opacityAnimation;
   late Animation<double> _fadeAnimation;
   late Widget _animatedModalBarrier;
-  late Animation<RelativeRect> animationPostioned;
   GlobalKey<AnimatedListState> globalKey = GlobalKey<AnimatedListState>();
-
 
   @override
   void initState() {
     super.initState();
     animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(seconds: 2),
       vsync: this,
-    )..repeat(reverse: true);
+    )..repeat();
     _animation = CurvedAnimation(
       parent: animationController,
       curve: Curves.easeInOut,
@@ -78,13 +78,7 @@ class _WidgetScreenState extends State<WidgetScreen>
       ),
     );
 
-    animationPostioned = RelativeRectTween(
-      begin: const RelativeRect.fromLTRB(0, 0, 0, 0),
-      end: const RelativeRect.fromLTRB(100, 100, 0, 0),
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOut,
-    ));
+
 
     _decorationAnimation = DecorationTween(
       begin: BoxDecoration(
@@ -125,17 +119,18 @@ class _WidgetScreenState extends State<WidgetScreen>
       animationController.forward();
     }
   }
+
   void addData() {
     globalKey.currentState!
         .insertItem(0, duration: const Duration(milliseconds: 500));
-    data.insert(0, '${data.length}Data 1');
+    data.insert(0, '${data.length} Data ');
   }
 
   void removeData(int index) {
     globalKey.currentState!.removeItem(
       index,
       duration: const Duration(milliseconds: 500),
-          (context, animation) {
+      (context, animation) {
         return SizeTransition(
           sizeFactor: animation,
           child: const Card(
@@ -157,6 +152,8 @@ class _WidgetScreenState extends State<WidgetScreen>
 
   @override
   Widget build(BuildContext context) {
+    const double smallLogo = 100;
+    const double bigLogo = 200;
     HomePageProvider homePageProviderfalse =
         Provider.of<HomePageProvider>(context, listen: false);
     HomePageProvider homePageProviderTrue =
@@ -335,15 +332,34 @@ class _WidgetScreenState extends State<WidgetScreen>
           ),
         ),
       ),
-      PositionedTransition(
-        rect: animationPostioned,
-        child: Container(
-          width: 100,
-          height: 100,
-          color: Colors.blue,
-          child: const Center(
-              child: Text('Move Me', style: TextStyle(color: Colors.white))),
-        ),
+      LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final Size biggest = constraints.biggest;
+          return Stack(
+            children: <Widget>[
+              PositionedTransition(
+                rect: RelativeRectTween(
+                  begin: RelativeRect.fromSize(
+                    const Rect.fromLTWH(0, 0, smallLogo, smallLogo),
+                    biggest,
+                  ),
+                  end: RelativeRect.fromSize(
+                    Rect.fromLTWH(biggest.width - bigLogo,
+                        biggest.height - bigLogo, bigLogo, bigLogo),
+                    biggest,
+                  ),
+                ).animate(CurvedAnimation(
+                  parent: animationController,
+                  curve: Curves.elasticInOut,
+                )),
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: FlutterLogo(),
+                ),
+              ),
+            ],
+          );
+        },
       ),
       DecoratedBoxTransition(
         position: DecorationPosition.background,
@@ -390,36 +406,34 @@ class _WidgetScreenState extends State<WidgetScreen>
           ],
         ),
       ),
-      Container(),
-      AnimatedIcon(
-        icon: AnimatedIcons.add_event,
-        progress: animationController,
-        size: 50,
-      ),
       Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AnimatedList(
-            key: globalKey,
-            itemBuilder: (context, index, animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                child: Card(
-                  color: Colors.green.shade200,
-                  child: ListTile(
-                    title: Text(data[index]),
-                    trailing: IconButton(
-                      onPressed: () {
-                        removeData(index);
-                      },
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.red,
+          SizedBox(
+            height: 630,
+            child: AnimatedList(
+              key: globalKey,
+              itemBuilder: (context, index, animation) {
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: Card(
+                    color: Colors.green.shade200,
+                    child: ListTile(
+                      title: Text(data[index]),
+                      trailing: IconButton(
+                        onPressed: () {
+                          removeData(index);
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           const SizedBox(
             height: 50,
@@ -432,6 +446,125 @@ class _WidgetScreenState extends State<WidgetScreen>
           ),
         ],
       ),
+      AnimatedIcon(
+        icon: AnimatedIcons.add_event,
+        progress: animationController,
+        size: 50,
+      ),
+      AnimatedPhysicalModel(
+        duration: const Duration(seconds: 1),
+        shape: BoxShape.rectangle,
+        elevation: homePageProviderTrue.isMoved ? 10.0 : 2.0,
+        color: homePageProviderTrue.isMoved ? Colors.blue : Colors.red,
+        shadowColor:
+            homePageProviderTrue.isMoved ? Colors.blueAccent : Colors.redAccent,
+        borderRadius:
+            BorderRadius.circular(homePageProviderTrue.isMoved ? 20 : 5),
+        child: Container(
+          height: 100,
+          width: 100,
+          color: Colors.transparent,
+          child: const Center(
+            child: Text(
+              'Tap Me',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      ),
+      AnimatedSize(
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInOut,
+        child: Container(
+          width: homePageProviderTrue.isMoved ? 200 : 100,
+          height: homePageProviderTrue.isMoved ? 200 : 100,
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: const Text(
+            'Tap Me',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ),
+      Consumer<HomePageProvider>(
+        builder: (context, provider, child) {
+          return AnimatedPadding(
+            duration: const Duration(seconds: 1),
+            curve: Curves.easeInOut,
+            padding: EdgeInsets.all(provider.padding),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              color: Colors.blue,
+              child: const Text(
+                'Tap Me',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          );
+        },
+      ),
+      TweenAnimationBuilder(
+        tween: Tween<double>(
+          begin: 0,
+          end: 2 * pi,
+        ),
+        // tween: ColorTween(begin: Colors.amber, end: Colors.deepPurple),
+        duration: const Duration(seconds: 10),
+        child: Container(
+          height: 200,
+          width: 200,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('asset/image-removebg-preview.png')),
+          ),
+        ),
+        builder: (context, value, child) => Transform.rotate(
+          angle: value,
+          child: child,
+        ),
+      ),
+      AnimatedBuilder(
+        animation: animationController,
+        child: Container(
+          height: 200,
+          width: 200,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('asset/image-removebg-preview.png')),
+          ),
+        ),
+        builder: (context, child) {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return RotationTransition(
+                turns: animationController,
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+      AnimatedDefaultTextStyle(
+        duration: const Duration(milliseconds: 500),
+        style: const TextStyle(
+            color: Colors.black, fontSize: 22, letterSpacing: 1),
+        curve: Curves.bounceIn,
+        child: Text(
+          homePageProviderTrue.isMoved ? 'Sucefully' : 'hello',
+        ),
+      ),
+      AnimatedTheme(
+        data: homePageProviderTrue.themeData,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInOut,
+        child: Container(
+          width: 200,
+          height: 200,
+          color: Colors.blue,
+          child: const Center(
+              child: Text('Theme change Me', style: TextStyle(color: Colors.white))),
+        ),
+      ),
     ];
 
     return Scaffold(
@@ -441,14 +574,16 @@ class _WidgetScreenState extends State<WidgetScreen>
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _toggleFade();
-                homePageProviderfalse.animatorChange();
-              });
-            },
-            child: animationWidget[homePageProviderTrue.animationIndex]),
+        child: Center(
+          child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _toggleFade();
+                });
+                  homePageProviderfalse.animatorChange();
+              },
+              child: animationWidget[homePageProviderTrue.animationIndex]),
+        ),
       ),
     );
   }
